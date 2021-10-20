@@ -4,22 +4,29 @@
 		<title>Om Puter</title>		
 	</head>
 	<body>
-		
+	
 		<?php
+		
 		if(isset($_POST["namagambar"])){
 			
-			include("compressimage.php");			
+			include("compressimage.php");
+			
 			$namagambar = $_POST["namagambar"];
-			uploadAndResize($namagambar, "gambar", "uploads/"  , 32);
-			echo "Yes!";
+			
+			uploadAndResize($namagambar, "filegambar", "uploads/", 512);
+			
+			echo "Berhasil diunggah!";
 			
 		}
+		
 		?>
-	
+		
 		<form method="post" enctype="multipart/form-data">
-			<input type="text" name="namagambar">
-			<input type="file" name="gambar">
-			<input type="submit" value="Upload">
+		
+			<input placeholder="Nama Baru Gambar" name="namagambar">
+			<input type="file" name="filegambar">
+			<input type="submit" value="Unggah">
+			
 		</form>
 		
 	</body>
