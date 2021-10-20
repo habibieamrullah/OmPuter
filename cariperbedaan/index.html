@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Om Puter</title>		
+		<script src="phaser.min.js"></script>
+	</head>
+	<body style="background-color: black; margin: 0; padding: 0;">
+		<div id="container" style="position: fixed; left: 0; top: 0; right: 0; bottom: 0;"></div>
+		
+		<script>
+			
+			var refWidth = 1280;
+			var refHeight = 720;
+			var gameengine;
+			var tombolperbedaan = [];
+			var sudahditemukan = [];
+			var skor = 0;
+			var teksskor;
+			var timer = 25;
+			
+			var suarabenar;
+			
+			var tekstimer;
+			
+			var timerbar;
+			var timerbarmask;
+			var timerbarval;
+			
+			var tid = 0;
+			
+			var config = {
+				type: Phaser.AUTO,
+				backgroundColor: 'black',
+				scale: {
+					mode: Phaser.Scale.FIT,
+					autoCenter: Phaser.Scale.CENTER_BOTH,
+					_parent: 'container',
+					width: refWidth,
+					height: refHeight
+				},
+				scene: {
+					preload: preload,
+					create: create
+				}
+			};
+
+			var game = new Phaser.Game(config);
+
+			function preload ()
+			{
+				this.load.image('bg', 'bg.jpg');
+				this.load.image('gambar', 'gambar.jpg');
+				this.load.image('tombol', 'tombol.jpg');
+				
+				this.load.image('benar', 'benar.png');
+				this.load.image('salah', 'salah.png');
+				
+				this.load.image('bar', 'bar.png');
+				this.load.image('barmask', 'barmask.png');
+				
+				this.load.audio('suarabenar', [
+					'betul.mp3'
+				]);
+			}
+
+			function create ()
+			{
+			
+				gameengine = this;
+				
+				timerbarval = timer;
+				
+				timerbarmask = this.add.image(refWidth, refHeight, 'barmask').setOrigin(1);
+				
+				this.add.image(0, 0, 'bg').setOrigin(0);
+				var gambar = this.add.image(refWidth/2, refHeight/2, 'gambar').setOrigin(0.5).setInteractive();
+				gambar.on("pointerdown", function(){
+					//alert("Salah!");
+					tampilkanTanda("salah");
+					skor -= 50;
+					teksskor.text = "Skor: " + skor;
+				});
+				
+				
+				buatTombolSepasang(1000, 160);
+				buatTombolSepasang(890, 480);
+				buatTombolSepasang(890, 295);
+				buatTombolSepasang(1050, 530);
+				buatTombolSepasang(735, 530);
+				
+				teksskor = this.add.text(refWidth/2, 55, "Skor: " + skor, { font : "50px Arial", color : "blue" });
+				teksskor.setOrigin(0.5);
+				
+				tekstimer = this.add.text(refWidth/2, refHeight-55, "Timer: " + timer, { font : "25px Arial", color : "blue" });
+				tekstimer.setOrigin(0.5);
+				
+				
+				
+				
+				timerbar = this.add.image(refWidth, refHeight, 'bar').setOrigin(1);
+				timerbar.mask = new Phaser.Display.Masks.BitmapMask(this, timerbarmask);
+				
+				suarabenar =  this.sound.add('suarabenar');
+				
+				waktuBerkurang();
+				
+			}
+			
+			function waktuBerkurang(){
+				//console.log("Timer: " + timer);
+				setTimeout(function(){
+					if(timer > 0){
+						timer--;
+						waktuBerkurang();
+						tekstimer.text = "Timer: " + timer;
+						timerbar.x -= refWidth/timerbarval;
+					}else{
+						alert("Game Over! Waktunya habis.");
+					}
+				}, 1000);
+				
+			}
+			
+			function buatTombol(x, y){
+				var tombol = gameengine.add.image(x, y, 'tombol').setOrigin(0.5).setInteractive();
+				tombol.setAlpha(0.0001);
+				tombol.setScale(1.8);
+				tombol.on("pointerdown", function(){
+					//alert("Benar! ID Tombol: " + this.tid);
+					
+					if(!cekApakahSudahDitemukan(this.tid)){
+						sudahditemukan.push(this.tid);
+						tampilkanTanda("benar", gameengine);
+						console.log("Ya, kamu menemukan perbedaan baru.");
+						
+						skor += 100;
+						teksskor.text = "Skor: " + skor;
+						
+						suarabenar.play();
+						
+					}else{
+						console.log("Ternyata kamu sudah menemukan perbedaan ini.");
+					}
+					
+				});
+				tombol.tid = tid;
+				return tombol;
+			}
+			
+			function tampilkanTanda(namagambar){
+				var pointer = gameengine.input.activePointer;
+				
+				console.log("Posisi mouse x: " + pointer.worldX);
+				
+				var posisix = pointer.worldX;
+				
+				var gambar1 = gameengine.add.image(posisix, pointer.worldY, namagambar).setOrigin(0.5);
+				
+				if(posisix > refWidth/2)
+					posisix -= 514;
+				else
+					posisix += 514;
+				
+				var gambar2 = gameengine.add.image(posisix, pointer.worldY, namagambar).setOrigin(0.5);
+				
+				
+			}
+			
+			function buatTombolSepasang(x, y){
+				tombolperbedaan.push({ 
+					"kanan" : buatTombol(x, y), 
+					"kiri" : buatTombol(x-514, y)
+				});
+				
+				tid++;
+			}
+			
+			function cekApakahSudahDitemukan(idtombol){
+				for(var i = 0; i < sudahditemukan.length; i++){
+					if(sudahditemukan[i] == idtombol){
+						return true;
+					}
+				}
+				
+				return false;
+			}
+
+		</script>
+	</body>
+</html>
