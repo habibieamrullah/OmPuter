@@ -1,4 +1,23 @@
 <?php
+
+function uploadAndResize($newimagename, $imageinputname, $uploaddirectory, $widthsize){
+	$maxsize = 224288;
+	if($_FILES[$imageinputname]["size"] == 0){}
+	else{
+		if($_FILES[$imageinputname]['error'] > 0) {}
+		$extsAllowed = array( 'jpg', 'jpeg', 'png' );
+		$uploadedfile = $_FILES[$imageinputname]["name"];
+		$extension = pathinfo($uploadedfile, PATHINFO_EXTENSION);
+		if (in_array($extension, $extsAllowed) ) { 
+			//Means extension is okay, 
+			//Proceed storing new pic
+			$newppic = $newimagename;
+			resizeAndSave($_FILES[$imageinputname]['tmp_name'], $uploaddirectory . $newppic . "." . $extension, $widthsize);
+		}else{}
+	}
+}
+
+
 // Link image type to correct image loader and saver
 // - makes it easier to add additional types later on
 // - makes the function easier to read
