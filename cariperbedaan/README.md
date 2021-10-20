@@ -1,2 +1,10 @@
-Tutorial cara membuat permainan Mencari Perbedaan Gambar
-https://www.youtube.com/watch?v=K7R6Q_31oyw&list=PLT2PgOHCtd7YGRiAWngTHC2JBP9MHa477
+# OmPuter
+ Source Code Pelajaran Coding Channel Om Puter
+
+Selamat datang!
+
+Di sini kamu bisa menemukan source code pelajaran-pelajaran coding yang saya sampaikan di channel saya https://www.youtube.com/omputer
+
+Kalau kamu belum subscribe, boleh dong subscribe di channel saya, like dan share video-videonya untuk mendukung Om Puter. Hehehe.
+
+Terima kasih!
