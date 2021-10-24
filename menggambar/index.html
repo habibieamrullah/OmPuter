@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Menggambar</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no">
+		<script src="phaser.min.js"></script>
+		
+	</head>
+	<body>
+	
+		<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+			<div id="body" style="background-color: black; width: 100%; height: 100%;"></div>
+		</div>
+				
+		<script>
+			
+			var mbuh;
+			
+			var config;
+			var game;
+			
+			var size = 2;
+			var graphics;
+			var curves = [];
+			var curve = null;
+			var brushcolor = "#000000";
+			var backgroundcolor = "#f0f0f0";
+			var isdoodling = true;
+			var doodlestarted = false;
+			var generateddrawing;
+			var eraser;
+			var iserasing;
+			
+			
+			var userWidth = 1280;			
+			var userHeight = 720;
+			
+			class Drawing extends Phaser.Scene {
+
+				constructor ()
+				{
+					super('Drawing');
+				}
+
+				preload ()
+				{
+					
+					this.load.image("eraser", "images/eraser.png");
+					
+				}
+
+				create ()
+				{
+				
+					mbuh = this;
+					
+					
+					var distance = size;
+					var lastPosition = new Phaser.Math.Vector2();
+					var current = null;
+					var previous = null;
+					
+					
+					graphics = mbuh.add.graphics(200, 200);
+					graphics.depth = 10;
+					
+					mbuh.input.on('pointerdown', function (pointer) {
+						if(isdoodling){
+							
+								doodlestarted = true;
+								lastPosition.x = pointer.x;
+								lastPosition.y = pointer.y;
+								curve = new Phaser.Curves.Spline([ pointer.x, pointer.y ]);
+								curves.push(curve);
+							
+						}
+					}, this);
+					
+					mbuh.input.on('pointermove', function (pointer) {
+						if(isdoodling){
+							
+							if (pointer.isDown){
+								
+								var x = pointer.x;
+								var y = pointer.y;
+
+								if (Phaser.Math.Distance.Between(x, y, lastPosition.x, lastPosition.y) > distance)
+								{
+									
+						
+									
+									if(doodlestarted){
+								
+										lastPosition.x = x;
+										lastPosition.y = y;
+										previous = current;
+										curve.addPoint(x, y);
+										curves.push(curve);
+										graphics.lineStyle(size * 1.5, brushcolor.replace("#", "0x"));
+										curves[curves.length-1].draw(graphics, curves.length-1);
+										
+									}
+
+								}
+							}
+							
+						}
+						
+						if (pointer.isDown && iserasing)
+						{
+							generateddrawing.erase(eraser, pointer.x, pointer.y);
+						}
+					}, this);
+					
+					
+					mbuh.input.on('pointerup', function (pointer){
+						
+						if(iserasing){
+							generateddrawing.saveTexture("generateddoodle");
+						}
+						
+						if(isdoodling){
+							graphics.save();
+							curves = [];
+							curve = null;
+							doodlestarted = false;
+							preserveGraphics();
+							
+						}
+						
+						
+					}, this);
+					
+					generateddrawing = mbuh.add.renderTexture(0, 0, userWidth, userHeight);	
+					
+					//End of Doodle Graphics
+					
+				}
+			}
+			
+			
+			config = {
+				type: Phaser.CANVAS,
+				backgroundColor: '#f0f0f0',
+				scale: {
+					parent: 'body',
+					mode: Phaser.Scale.FIT,
+					autoCenter: Phaser.Scale.CENTER_BOTH,
+					width: userWidth,
+					height: userHeight
+				},
+				scene: [ Drawing ],
+				dom: {
+					createContainer: true
+				},
+			};
+
+			game = new Phaser.Game(config);
+			
+			function initializeEraser(isit){
+				if(isit){
+					eraser = mbuh.make.image({ key: 'eraser' }, false).setScale(0.5);
+					iserasing = true;
+					isdoodling = false;
+				}else{
+					iserasing = false;
+					isdoodling = true;
+				}
+			}
+			
+			function preserveGraphics(){
+				graphics.generateTexture("generateddoodle");
+				try{
+					generateddrawing.destroy();
+				}catch(e){
+				
+				}
+				generateddrawing = mbuh.add.renderTexture(0, 0, userWidth, userHeight);
+				generateddrawing.draw('generateddoodle', 0, 0);
+				
+				graphics.commandBuffer = [];
+				
+			}
+			
+			
+		</script>
+		
+		
+	</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Om Puter</title>		
+		<script src="jquery.min.js"></script>
+		<script src="beeboy.js"></script>
+	</head>
+	<body>
+		
+		<div 
+		
+			class="bb" 
+			id="gambarmainan"
+			data-scaletype="scaletofitH" 
+			data-fontsize="21"
+			data-width="620" 
+			data-height="354" 
+			data-anchor="middle" 
+			data-pivotx="0.5"
+			data-pivoty="0.5"
+			data-x="0"
+			data-y="0"
+			data-image="mainan.jpg">
+			
+			
+			
+		</div>
+		
+		<a href="#" onclick="alert('Hidung Beruang');">
+			<div 
+				class="bb" 
+				data-scaletype="scaletofitH" 
+				data-fontsize="21"
+				data-width="64" 
+				data-height="64" 
+				data-anchor="child" 
+				data-parent="gambarmainan"
+				data-pivotx="0.5"
+				data-pivoty="0.5"
+				data-x="-50"
+				data-y="-50">
+			</div>
+		</a>
+		
+		<a href="#" onclick="alert('Kereta');">
+			<div 
+				class="bb" 
+				data-scaletype="scaletofitH" 
+				data-fontsize="21"
+				data-width="64" 
+				data-height="64" 
+				data-anchor="child" 
+				data-parent="gambarmainan"
+				data-pivotx="0.5"
+				data-pivoty="0.5"
+				data-x="100"
+				data-y="100">
+			</div>
+		</a>
+		
+		<a href="#" onclick="alert('Truk');">
+			<div 
+				class="bb" 
+				data-scaletype="scaletofitH" 
+				data-fontsize="21"
+				data-width="128" 
+				data-height="64" 
+				data-anchor="child" 
+				data-parent="gambarmainan"
+				data-pivotx="0.5"
+				data-pivoty="0.5"
+				data-x="-140"
+				data-y="80">
+			</div>
+		</a>
+		
+		<script>
+			
+			bbRefScreen = {
+				width : 1280,
+				height : 720,
+			};
+			
+			$(document).ready(function(){
+				bbLoadElements();
+			});
+			
+			$(window).resize(function(){
+				bbLoadElements();
+			});
+			
+		</script>
+		
+	</body>
+</html>
