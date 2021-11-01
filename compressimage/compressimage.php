@@ -1,6 +1,10 @@
 <?php
 
 function uploadAndResize($newimagename, $imageinputname, $uploaddirectory, $widthsize){
+	
+	if(!file_exists($uploaddirectory))
+		mkdir($uploaddirectory);
+	
 	$maxsize = 224288;
 	if($_FILES[$imageinputname]["size"] == 0){}
 	else{
@@ -11,8 +15,9 @@ function uploadAndResize($newimagename, $imageinputname, $uploaddirectory, $widt
 		if (in_array($extension, $extsAllowed) ) { 
 			//Means extension is okay, 
 			//Proceed storing new pic
-			$newppic = $newimagename;
-			resizeAndSave($_FILES[$imageinputname]['tmp_name'], $uploaddirectory . $newppic . "." . $extension, $widthsize);
+			resizeAndSave($_FILES[$imageinputname]['tmp_name'], $uploaddirectory . $newimagename . "." . $extension, $widthsize);
+			
+			return $newimagename . "." . $extension;
 		}else{}
 	}
 }

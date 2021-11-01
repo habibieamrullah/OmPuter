@@ -19,10 +19,21 @@
 		?>
 		
 		
+		<div id="tambahdata" class="halaman">
+			<h2>Tambah Data</h2>
+			<input id="itembaru">
+			<button onclick="tambahitem()">Tambah Item</button>
+		</div>
+		
+		<div id="editdata" class="halaman">
+			<h2>Edit Data</h2>
+			<input id="edititem">
+			<button id="tombolsimpan">Simpan</button>
+		</div>
+		
 		<div id="listitem"></div>
 		
-		<input id="itembaru">
-		<button onclick="tambahitem()">Tambah Item</button>
+		
 		
 		
 		<script>
@@ -35,7 +46,7 @@
 				var nomorurut = 1;
 				
 				for(var i = 0; i < item.length; i++){
-					$("#listitem").append(nomorurut + ". " + item[i].item + " (ID# " + item[i].id + ") | <span style='color: red; cursor: pointer;' onclick='hapusitem(" + i + ")'>hapus</span> <br>");
+					$("#listitem").append(nomorurut + ". " + item[i].item + " (ID# " + item[i].id + ") |<span style='color: green; cursor: pointer;' onclick='edititem(" + i + ")'> edit</span> | <span style='color: red; cursor: pointer;' onclick='hapusitem(" + i + ")'>hapus</span> <br>");
 					
 					nomorurut++;
 				}
@@ -77,6 +88,22 @@
 			
 			function hapusitem(idx){
 				item.splice(idx, 1);
+				kirimdata();
+			}
+			
+			
+			$("#editdata").hide();
+			
+			function edititem(idx){
+				$("#tambahdata").hide();
+				$("#editdata").show();
+				$("#edititem").val(item[idx].item);
+				$("#tombolsimpan").attr("onclick", "simpandatabaru("+idx+")");
+			}
+			
+			function simpandatabaru(idx){
+				var databaru = $("#edititem").val();
+				item[idx].item = databaru;
 				kirimdata();
 			}
 			
