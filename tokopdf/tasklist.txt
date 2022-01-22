@@ -1,4 +1,0 @@
-delete slider gambarnya belum kehapus
-upload file, kudu rename file
-reset password, passwordnya keliatan
-setelah reset password kok balik ke home... resend confirmation email not working

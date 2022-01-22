@@ -1,2 +1,0 @@
-<?php
-echo "Ciihuy forever...";
