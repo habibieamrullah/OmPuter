@@ -1,10 +1,6 @@
 # OmPuter
- Source Code Pelajaran Coding Channel Om Puter
+Source Code PHP untuk membuat Toko Buku PDF Online
 
 Selamat datang!
 
-Di sini kamu bisa menemukan source code pelajaran-pelajaran coding yang saya sampaikan di channel saya https://www.youtube.com/omputer
-
-Kalau kamu belum subscribe, boleh dong subscribe di channel saya, like dan share video-videonya untuk mendukung Om Puter. Hehehe.
-
-Terima kasih!
+Cara setup pertama kamu edit file dbcon.php di dalam folder dbcon. Kemudian edit file tables.php baris ketiga untuk mengganti prefix tabel.
