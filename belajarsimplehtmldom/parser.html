@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Parser Rumah123</title>
+		<script src="jquery.min.js"></script>
+	</head>
+	<body>
+	
+		<div>
+			<label>Endpoint</label>
+			<input id="endpoint">
+			<label>Base URL</label>
+			<input id="baseurl">
+			<label>First Page</label>
+			<input type="number" id="firstpage">
+			<label>Last Page</label>
+			<input type="number" id="lastpage">
+			<label>Timeout (seconds)</label>
+			<input type="number" id="timeout" value="30">
+			
+			<button onclick="Start()">Start</button>
+		</div>
+		
+		<div id="info"></div>
+		
+		
+		<script>
+			
+			var endpoint; // http://localhost/OmPuter/belajarsimplehtmldom/parserbackend.php;
+			
+			var baseurl;
+			var firstpage;
+			var lastpage;
+			var currentpage;
+			var alllinks;
+			
+			var linksarray;
+			var currentlink;
+			
+			var timeout;
+		
+			function Start(){
+				
+				endpoint = $("#endpoint").val();
+				
+				baseurl = $("#baseurl").val();
+				firstpage = $("#firstpage").val();
+				lastpage = $("#lastpage").val();
+				timeout = $("#timeout").val() * 1000;
+				
+				currentpage = firstpage;
+				
+				StartScraping();
+				
+			}
+			
+			function ShowInfo(str){
+				$("#info").html(str);
+			}
+			
+			var tout;
+			function StartScrapingTimeout(){
+				clearTimeout(tout);
+				tout = setTimeout(function(){
+					currentpage++;
+					StartScraping();
+				}, timeout);
+			}
+			
+			function StartEachPageScrapingTimeout(){
+				clearTimeout(tout);
+				tout = setTimeout(function(){
+					currentlink--;
+					StartEachPageScraping();
+				}, timeout);
+			}
+		
+			
+			function StartScraping(){
+				if(currentpage <= lastpage){
+					ShowInfo("Sedang cek halaman listing ("+currentpage+" dari " +lastpage+ " halaman): " + baseurl + "/" + currentpage);
+					
+					StartScrapingTimeout();
+					
+					$.post(endpoint, {
+						"pageurl" : baseurl + "/" + currentpage
+					}, function(data){
+						//console.log(data);
+						alllinks += data;
+						currentpage++;
+						ShowInfo("Halaman " + currentpage + " OKE!");
+						StartScraping();
+					});
+				}else{
+					linksarray = alllinks.split(",");
+					currentlink = linksarray.length-1;
+					
+					ShowInfo("Persiapan cek seluruh " +lastpage+ " halaman listing usai.");
+					StartEachPageScraping();
+				}
+			}
+			
+			function StartEachPageScraping(){
+				if(currentlink >= 0){
+					if(linksarray[currentlink] == ""){
+						currentlink--;
+						StartEachPageScraping();
+					}else{
+					
+						StartEachPageScrapingTimeout();
+						
+						ShowInfo("Sedang scraping halaman single page (Sisa: " +currentlink+ "): " + linksarray[currentlink].replace("undefined", ""));
+						$.post(endpoint, {
+							"url" : linksarray[currentlink].replace("undefined", "")
+						}, function(data){
+							if(parseInt(data) == 1){
+								currentlink--;
+								StartEachPageScraping();
+							}
+						});
+					}
+					
+					
+				}else{
+					ShowInfo("Tugas selesai!");
+					alert("Tugas selesai!");
+				}
+			}
+			
+			
+		</script>
+		
+	</body>
+</html>
+
